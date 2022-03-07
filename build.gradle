@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.tringles'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '1.8'
 
 configurations {
     compileOnly {
@@ -20,6 +20,14 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.2'
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
