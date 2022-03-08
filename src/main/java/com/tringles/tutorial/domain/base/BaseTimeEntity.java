@@ -1,4 +1,4 @@
-package com.tringles.tutorial.domain;
+package com.tringles.tutorial.domain.base;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
