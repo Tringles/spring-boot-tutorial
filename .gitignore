@@ -39,3 +39,6 @@ out/
 ### env ###
 application.yml
 application-oauth.yml
+
+### MAC OS ###
+.DS_Store
