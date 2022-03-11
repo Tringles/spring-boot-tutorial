@@ -1,5 +1,3 @@
-package com.tringles.tutorial.config;
-
 import com.tringles.tutorial.domain.User;
 import com.tringles.tutorial.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
