@@ -1,4 +1,4 @@
-package com.tringles.tutorial.config;
+package com.tringles.tutorial.config.OAuth2;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

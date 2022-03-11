@@ -1,12 +1,14 @@
-package com.tringles.tutorial.config;
+package com.tringles.tutorial.config.OAuth2;
 
+import com.tringles.tutorial.config.JWT.JwtUtil;
 import com.tringles.tutorial.domain.User;
 import com.tringles.tutorial.service.UserService;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -36,7 +38,19 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             SecurityContextHolder.getContext().setAuthentication(
                     new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
             );
+
+            String authToken = JwtUtil.makeAuthToken(user);
+            writeTokenResponse(response, authToken);
         }
-        request.getRequestDispatcher("/").forward(request, response);
+    }
+
+    private void writeTokenResponse(HttpServletResponse response, String authToken) throws IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
+        response.setContentType("application/json;charset=UTF-8");
+
+        var writer = response.getWriter();
+        writer.println(authToken);
+        writer.flush();
     }
 }
