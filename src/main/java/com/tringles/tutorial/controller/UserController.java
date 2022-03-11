@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class UserController {
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/")
-    public Object checkUserInfo(@AuthenticationPrincipal Object user) {
+    public String hello() {
+        return "Home page";
+    }
 
+    @GetMapping("/auth")
+    public Object checkUserInfo(@AuthenticationPrincipal Object user){
         return user;
     }
 }
