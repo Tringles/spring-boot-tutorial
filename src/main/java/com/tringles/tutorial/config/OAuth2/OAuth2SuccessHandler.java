@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -31,16 +33,28 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
         Object principal = authentication.getPrincipal();
-        if (principal instanceof DefaultOAuth2User) {
-            com.tringles.tutorial.domain.OAuth2User oauth = com.tringles.tutorial.domain.OAuth2User
-                    .Provider.google.convert((OAuth2User) principal);
-            User user = userService.load(oauth);
-            SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
-            );
+        if (principal instanceof OAuth2User) {
+            if (isGoogle(principal)) {
+                com.tringles.tutorial.domain.OAuth2User oauth = com.tringles.tutorial.domain.OAuth2User
+                        .Provider.google.convert((OAuth2User) principal);
+                User user = userService.load(oauth);
+                SecurityContextHolder.getContext().setAuthentication(
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
+                );
 
-            String authToken = JwtUtil.makeAuthToken(user);
-            writeTokenResponse(response, authToken);
+                String authToken = JwtUtil.makeAuthToken(user);
+                writeTokenResponse(response, authToken);
+            } else {
+                com.tringles.tutorial.domain.OAuth2User oauth = com.tringles.tutorial.domain.OAuth2User
+                        .Provider.kakao.convert((OAuth2User) principal);
+                User user = userService.load(oauth);
+                SecurityContextHolder.getContext().setAuthentication(
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
+                );
+
+                String authToken = JwtUtil.makeAuthToken(user);
+                writeTokenResponse(response, authToken);
+            }
         }
     }
 
@@ -52,5 +66,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         var writer = response.getWriter();
         writer.println(authToken);
         writer.flush();
+    }
+
+    private boolean isGoogle(Object principal) {
+        return ((OAuth2User) principal).getAttribute("sub") != null;
     }
 }
