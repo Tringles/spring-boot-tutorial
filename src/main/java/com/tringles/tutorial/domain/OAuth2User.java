@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import java.util.Map;
+
 import static java.lang.String.format;
 
 @Data
@@ -40,9 +42,18 @@ public class OAuth2User extends BaseTimeEntity {
                         ;
             }
         },
-        naver {
+        kakao {
             public OAuth2User convert(org.springframework.security.oauth2.core.user.OAuth2User user) {
-                return null;
+                Map<String, Object> kakaoAccount = user.getAttribute("kakao_account");
+                Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
+
+                return OAuth2User.builder()
+                        .provider(kakao)
+                        .email((String) kakaoAccount.get("email"))
+                        .name((String) kakaoProfile.get("nickname"))
+                        .oauth2UserId(format("%s_%s", name(), user.getAttribute("id")))
+                        .build()
+                        ;
             }
         };
 
