@@ -3,7 +3,7 @@ package com.tringles.tutorial.config.JWT;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.tringles.tutorial.domain.User;
+import com.tringles.tutorial.domain.user.User;
 import com.tringles.tutorial.dto.VerifyResult;
 
 import java.time.Instant;

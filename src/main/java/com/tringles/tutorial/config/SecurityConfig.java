@@ -2,7 +2,7 @@ package com.tringles.tutorial.config;
 
 import com.tringles.tutorial.config.JWT.JwtCheckFilter;
 import com.tringles.tutorial.config.OAuth2.OAuth2SuccessHandler;
-import com.tringles.tutorial.config.OAuth2.OAuth2UserService;
+import com.tringles.tutorial.service.OAuth2UserService;
 import com.tringles.tutorial.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 
 @EnableWebSecurity()

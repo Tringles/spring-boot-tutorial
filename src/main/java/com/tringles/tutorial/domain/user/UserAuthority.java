@@ -1,4 +1,4 @@
-package com.tringles.tutorial.domain;
+package com.tringles.tutorial.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
