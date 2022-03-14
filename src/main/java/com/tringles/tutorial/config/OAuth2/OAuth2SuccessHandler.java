@@ -39,28 +39,30 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             if (isGoogle(principal)) {
                 com.tringles.tutorial.domain.oAuth2.OAuth2User oauth = com.tringles.tutorial.domain.oAuth2.OAuth2User
                         .Provider.google.convert((OAuth2User) principal);
-                User user = userService.load(oauth);
-                SecurityContextHolder.getContext().setAuthentication(
-                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
-                );
-
-                String authToken = JwtUtil.makeAuthToken(user);
-                writeTokenResponse(response, authToken);
+                writeTokenResponse(request, response, oauth);
             } else {
                 com.tringles.tutorial.domain.oAuth2.OAuth2User oauth = com.tringles.tutorial.domain.oAuth2.OAuth2User
                         .Provider.kakao.convert((OAuth2User) principal);
-                User user = userService.load(oauth);
-                SecurityContextHolder.getContext().setAuthentication(
-                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
-                );
-
-                String authToken = JwtUtil.makeAuthToken(user);
-                writeTokenResponse(response, authToken);
+                writeTokenResponse(request, response, oauth);
             }
         }
     }
 
-    private void writeTokenResponse(HttpServletResponse response, String authToken) throws IOException {
+    private void writeTokenResponse(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    com.tringles.tutorial.domain.oAuth2.OAuth2User oAuth2User)
+            throws IOException, ServletException {
+        User user = userService.load(oAuth2User);
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
+        );
+
+        String authToken = JwtUtil.makeAuthToken(user);
+        String refreshToken = JwtUtil.makeRefreshToken(user);
+        redisService.setValue(refreshToken, user.getEmail());
+        _writeTokenResponse(response, authToken, refreshToken);
+    }
+
     private void _writeTokenResponse(HttpServletResponse response,
                                      String authToken,
                                      String refreshToken) throws IOException {
