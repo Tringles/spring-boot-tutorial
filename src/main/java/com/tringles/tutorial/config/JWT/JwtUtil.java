@@ -5,7 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tringles.tutorial.domain.user.User;
 import com.tringles.tutorial.dto.VerifyResult;
+import org.springframework.http.HttpHeaders;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 
 public class JwtUtil {
@@ -36,5 +38,21 @@ public class JwtUtil {
             return VerifyResult.builder()
                     .success(false).username(decode.getSubject()).build();
         }
+    }
+
+    public static String resolveAuthToken(HttpServletRequest request) {
+        String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (bearer == null || !bearer.startsWith("Bearer ")) {
+            return null;
+        }
+        return bearer.substring("Bearer ".length());
+    }
+
+    public static String resolveRefreshToken(HttpServletRequest request) {
+        String bearer = request.getHeader("refresh_token");
+        if (bearer == null || !bearer.startsWith("Bearer ")) {
+            return null;
+        }
+        return bearer.substring("Bearer ".length());
     }
 }

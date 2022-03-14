@@ -3,6 +3,7 @@ package com.tringles.tutorial.config;
 import com.tringles.tutorial.config.JWT.JwtCheckFilter;
 import com.tringles.tutorial.config.OAuth2.OAuth2SuccessHandler;
 import com.tringles.tutorial.service.OAuth2UserService;
+import com.tringles.tutorial.service.RedisService;
 import com.tringles.tutorial.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -26,9 +27,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RedisService redisService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtCheckFilter checkFilter = new JwtCheckFilter(authenticationManager(), userService);
+        JwtCheckFilter checkFilter = new JwtCheckFilter(authenticationManager(), userService, redisService);
 
         http
                 .httpBasic().disable()
@@ -36,14 +40,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/auth/**").authenticated()
+                .antMatchers("/").authenticated()
                 .and()
                 .oauth2Login().successHandler(successHandler)
                 .userInfoEndpoint().userService(oAuth2UserService)
         ;
         http
-                .addFilterBefore(new JwtCheckFilter(authenticationManager(), userService),
+                .addFilterBefore(new JwtCheckFilter(authenticationManager(), userService, redisService),
                         UsernamePasswordAuthenticationFilter.class);
     }
 }

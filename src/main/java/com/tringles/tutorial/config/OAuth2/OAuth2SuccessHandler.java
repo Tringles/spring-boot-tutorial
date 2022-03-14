@@ -2,8 +2,10 @@ package com.tringles.tutorial.config.OAuth2;
 
 import com.tringles.tutorial.config.JWT.JwtUtil;
 import com.tringles.tutorial.domain.user.User;
+import com.tringles.tutorial.service.RedisService;
 import com.tringles.tutorial.service.UserService;
 import lombok.var;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +25,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public void onAuthenticationSuccess(
@@ -56,13 +61,21 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private void writeTokenResponse(HttpServletResponse response, String authToken) throws IOException {
+    private void _writeTokenResponse(HttpServletResponse response,
+                                     String authToken,
+                                     String refreshToken) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
+        response.setHeader("refresh_token", "Bearer " + refreshToken);
         response.setContentType("application/json;charset=UTF-8");
 
         var writer = response.getWriter();
-        writer.println(authToken);
-        writer.flush();
+        JSONObject json = new JSONObject();
+
+        json.put("access_token", authToken);
+        json.put("refresh_token", refreshToken);
+
+        writer.write(json.toString());
     }
 
     private boolean isGoogle(Object principal) {
