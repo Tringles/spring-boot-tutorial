@@ -1,4 +1,4 @@
-package com.tringles.tutorial.domain;
+package com.tringles.tutorial.domain.oAuth2;
 
 import com.tringles.tutorial.domain.base.BaseTimeEntity;
 import lombok.AllArgsConstructor;

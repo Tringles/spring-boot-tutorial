@@ -1,6 +1,6 @@
 package com.tringles.tutorial.repository;
 
-import com.tringles.tutorial.domain.User;
+import com.tringles.tutorial.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

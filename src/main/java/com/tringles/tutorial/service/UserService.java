@@ -1,8 +1,8 @@
 package com.tringles.tutorial.service;
 
-import com.tringles.tutorial.domain.OAuth2User;
-import com.tringles.tutorial.domain.User;
-import com.tringles.tutorial.domain.UserAuthority;
+import com.tringles.tutorial.domain.oAuth2.OAuth2User;
+import com.tringles.tutorial.domain.user.User;
+import com.tringles.tutorial.domain.user.UserAuthority;
 import com.tringles.tutorial.repository.OAuth2UserRepository;
 import com.tringles.tutorial.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
