@@ -1,7 +1,7 @@
 package com.tringles.tutorial.config.OAuth2;
 
 import com.tringles.tutorial.config.JWT.JwtUtil;
-import com.tringles.tutorial.domain.User;
+import com.tringles.tutorial.domain.user.User;
 import com.tringles.tutorial.service.UserService;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -35,7 +32,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         Object principal = authentication.getPrincipal();
         if (principal instanceof OAuth2User) {
             if (isGoogle(principal)) {
-                com.tringles.tutorial.domain.OAuth2User oauth = com.tringles.tutorial.domain.OAuth2User
+                com.tringles.tutorial.domain.oAuth2.OAuth2User oauth = com.tringles.tutorial.domain.oAuth2.OAuth2User
                         .Provider.google.convert((OAuth2User) principal);
                 User user = userService.load(oauth);
                 SecurityContextHolder.getContext().setAuthentication(
@@ -45,7 +42,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 String authToken = JwtUtil.makeAuthToken(user);
                 writeTokenResponse(response, authToken);
             } else {
-                com.tringles.tutorial.domain.OAuth2User oauth = com.tringles.tutorial.domain.OAuth2User
+                com.tringles.tutorial.domain.oAuth2.OAuth2User oauth = com.tringles.tutorial.domain.oAuth2.OAuth2User
                         .Provider.kakao.convert((OAuth2User) principal);
                 User user = userService.load(oauth);
                 SecurityContextHolder.getContext().setAuthentication(
