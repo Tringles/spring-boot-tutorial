@@ -13,7 +13,7 @@ import java.time.Instant;
 public class JwtUtil {
 
     private static final Algorithm ALGORITHM = Algorithm.HMAC256("TRINGLES");
-    private static final long AUTH_TIME = 60 * 60;
+    private static final long AUTH_TIME = 60 * 30;
     private static final long REFRESH_TIME = 60 * 60 * 24 * 7;
 
     public static String makeAuthToken(User user) {
